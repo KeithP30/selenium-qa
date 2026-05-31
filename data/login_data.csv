@@ -2,5 +2,5 @@ username,password,expected,description
 tomsmith,SuperSecretPassword!,PASS,Login valid
 tomsmith,wrongpass,FAIL,Password salah
 wronguser,SuperSecretPassword!,FAIL,Username tidak ada
-tomsmith,SuperSecretPassword!,FAIL,Username kosong
+,SuperSecretPassword!,FAIL,Username kosong
 tomsmith,,FAIL,Password kosong

@@ -1,5 +1,7 @@
 # tests/test_logout.py
 import pytest
+# FIX BUG-5: Import By langsung di sini, bukan pakai __import__() di dalam kode
+from selenium.webdriver.common.by import By
 from pages.login_page import LoginPage
 from pages.dashboard_page import DashboardPage
 
@@ -12,7 +14,7 @@ class TestLogout:
         Priority : HIGH
         Teknik   : EP (alur valid end-to-end)
         """
-        # STEP 1: Login terlebih dahulu
+        # STEP 1: Login
         login = LoginPage(driver)
         login.login('tomsmith', 'SuperSecretPassword!')
 
@@ -24,8 +26,7 @@ class TestLogout:
         # STEP 3: Logout
         dashboard.logout()
 
-        # STEP 4: Verifikasi sudah kembali ke halaman Login
-        # Setelah logout, the-internet.herokuapp.com redirect ke /login
+        # STEP 4: Verifikasi kembali ke halaman Login
         login_page_again = LoginPage(driver)
         assert '/login' in driver.current_url, \
             'Setelah logout, user harus diarahkan kembali ke halaman Login'
@@ -45,13 +46,10 @@ class TestLogout:
         dashboard = DashboardPage(driver)
         dashboard.logout()
 
-        # Coba paksa akses /secure langsung
+        # Paksa akses /secure langsung
         driver.get('https://the-internet.herokuapp.com/secure')
 
-        # Harus redirect atau tampil pesan error — tidak boleh masuk
+        # FIX BUG-5: Pakai By yang sudah di-import di atas, bukan __import__()
         assert '/secure' not in driver.current_url or \
-               dashboard.is_visible((
-                   __import__('selenium.webdriver.common.by', fromlist=['By']).By.CSS_SELECTOR,
-                   '.flash.error'
-               )), \
+               dashboard.is_visible((By.CSS_SELECTOR, '.flash.error')), \
                'Dashboard tidak boleh diakses setelah logout'

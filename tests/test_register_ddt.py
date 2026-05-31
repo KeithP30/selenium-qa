@@ -11,7 +11,8 @@ class TestRegisterDDT:
     @pytest.mark.parametrize(
         'row',
         REGISTER_DATA,
-        ids=[row[4] for row in REGISTER_DATA]
+        # FIX BUG-3: pakai row['description'] (dict key), bukan row[4] (list index)
+        ids=[row['description'] for row in REGISTER_DATA]
     )
     def test_register_from_csv(self, driver, row):
         """
@@ -20,6 +21,7 @@ class TestRegisterDDT:
         """
         page = RegisterPage(driver)
         page.navigate()
+        # FIX BUG-1: row sekarang dict (DictReader), akses row['key'] valid
         page.fill_form(
             username         = row['username'],
             password         = row['password'],

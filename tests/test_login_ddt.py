@@ -1,22 +1,24 @@
 # tests/test_login_ddt.py
 import pytest
 from pages.login_page import LoginPage
+
 # Data: (username, password, expected_success, test_id)
 LOGIN_DATA = [
-    ('tomsmith', 'SuperSecretPassword!', True, 'valid_credentials'),
-    ('tomsmith', 'wrongpassword', False, 'invalid_password'),
+    ('tomsmith',  'SuperSecretPassword!', True,  'valid_credentials'),
+    ('tomsmith',  'wrongpassword',        False, 'invalid_password'),
     ('wronguser', 'SuperSecretPassword!', False, 'invalid_username'),
-    ('', 'SuperSecretPassword!', False, 'empty_username'),
-    ('tomsmith', '', False, 'empty_password'),
-    ('', '', False, 'both_empty'),
+    ('',          'SuperSecretPassword!', False, 'empty_username'),
+    ('tomsmith',  '',                     False, 'empty_password'),
+    ('',          '',                     False, 'both_empty'),
 ]
+
 class TestLoginDDT:
+    # FIX: Perbaiki indentasi @pytest.mark.parametrize agar sejajar dengan def
     @pytest.mark.parametrize(
-    'username, password, expected_success, test_id',
-    LOGIN_DATA,
-    ids=[d[3] for d in LOGIN_DATA] # nama test yang deskriptif
-)
-    
+        'username, password, expected_success, test_id',
+        LOGIN_DATA,
+        ids=[d[3] for d in LOGIN_DATA]
+    )
     def test_login(self, driver, username, password, expected_success, test_id):
         page = LoginPage(driver)
         page.login(username, password)

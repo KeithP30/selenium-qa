@@ -1,3 +1,4 @@
+# tests/conftest.py
 import pytest
 import os
 import csv
@@ -9,27 +10,27 @@ from webdriver_manager.firefox import GeckoDriverManager
 @pytest.fixture(scope='function')
 def driver():
     options = Options()
-    
-    # 1. Deteksi CI yang lebih aman: Aktifkan headless jika variabel CI ada
+
+    # FIX BUG-6: Firefox headless flag yang benar adalah '-headless' (1 dash)
+    # '--headless' (2 dash) adalah flag Chrome, bukan Firefox
     if os.getenv('CI'):
-        options.add_argument('--headless')
-    
-    # 2. Matikan tab welcome / default browser check yang bisa bikin stuck
+        options.add_argument('-headless')
+        options.add_argument('--width=1920')
+        options.add_argument('--height=1080')
+
+    # Matikan tab welcome / default browser check
     options.set_preference("browser.shell.checkDefaultBrowser", False)
     options.set_preference("browser.startup.homepage", "about:blank")
     options.set_preference("startup.homepage_welcome_url", "about:blank")
     options.set_preference("startup.homepage_welcome_url.additional", "about:blank")
-    
-    options.add_argument('--width=1920')
-    options.add_argument('--height=1080')
 
-    # Setup Geckodriver untuk Firefox
     service = Service(GeckoDriverManager().install())
     d = webdriver.Firefox(service=service, options=options)
     d.implicitly_wait(10)
-    
+
     yield d
     d.quit()
+
 
 # Fixture untuk login page
 @pytest.fixture(scope='function')
@@ -37,15 +38,18 @@ def login_page(driver):
     from pages.login_page import LoginPage
     return LoginPage(driver)
 
+
+# FIX BUG-9: Ganti csv.reader -> csv.DictReader agar row bisa diakses
+# dengan row['key'] bukan row[index]
 def load_csv(file_name):
-    # Mengambil path absolut ke folder data/
+    """Baca CSV dari folder data/, kembalikan list of dict (DictReader)."""
     file_path = os.path.join(os.path.dirname(__file__), '..', 'data', file_name)
-    with open(file_path, mode='r') as f:
-        reader = csv.reader(f)
-        next(reader) # Lewati baris header (jika ada)
+    with open(file_path, mode='r', newline='', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
         return list(reader)
 
-# Hook otomatis untuk mengambil screenshot saat test FAIL
+
+# Hook otomatis screenshot saat test FAIL
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     outcome = yield
@@ -56,3 +60,4 @@ def pytest_runtest_makereport(item, call):
             os.makedirs('reports/screenshots', exist_ok=True)
             name = item.nodeid.replace('/', '_').replace('::', '_')
             driver.save_screenshot(f'reports/screenshots/{name}.png')
+            print(f'\nScreenshot disimpan: reports/screenshots/{name}.png')

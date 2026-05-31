@@ -1,5 +1,9 @@
-username,email,password,expected,description
-testuser01,testuser01@example.com,Password123!,PASS,Registrasi dengan data valid
-,testuser01@example.com,Password123!,FAIL,Registrasi tanpa username
-testuser02,,Password123!,FAIL,Registrasi tanpa email
-testuser03,testuser03@example.com,,FAIL,Registrasi tanpa password
+username,password,confirm_password,first_name,last_name,email,expected,description
+budi_valid01,Test@1234,Test@1234,Budi,Santoso,budi@test.com,PASS,Registrasi valid - semua data benar
+ab,Test@1234,Test@1234,Ani,Wijaya,ani@test.com,FAIL,Username terlalu pendek (2 char - bawah min 3 BVA)
+user_valid02,Ab@1234,Ab@1234,Citra,Dewi,citra@test.com,FAIL,Password terlalu pendek (7 char - bawah min 8 BVA)
+user_valid03,Test@1234,WrongPass1!,Dodi,Firmansyah,dodi@test.com,FAIL,Confirm password tidak cocok
+user_valid04,Test@1234,Test@1234,Eko,Prasetyo,bukanformat,FAIL,Format email tidak valid (tanpa @)
+,Test@1234,Test@1234,Fani,Susanti,fani@test.com,FAIL,Username kosong (field wajib)
+user_valid06,,Test@1234,Gilang,Ramadan,gilang@test.com,FAIL,Password kosong (field wajib)
+user_abc07,Test@12345678,Test@12345678,Hana,Pertiwi,hana@test.com,PASS,Registrasi valid - password panjang (18 char)
