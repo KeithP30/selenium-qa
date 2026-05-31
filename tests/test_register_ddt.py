@@ -11,7 +11,7 @@ class TestRegisterDDT:
     @pytest.mark.parametrize(
         'row',
         REGISTER_DATA,
-        ids=[row['description'] for row in REGISTER_DATA]
+        ids=[row[4] for row in REGISTER_DATA]
     )
     def test_register_from_csv(self, driver, row):
         """
