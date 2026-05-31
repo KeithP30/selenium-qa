@@ -9,18 +9,14 @@ from webdriver_manager.firefox import GeckoDriverManager
 def driver():
     options = Options()
     
-    # Menghilangkan deteksi otomasi dan tab welcome/ekstensi
-    options.set_preference("browser.shell.checkDefaultBrowser", False)
-    options.set_preference("browser.startup.homepage", "about:blank")
-    options.set_preference("startup.homepage_welcome_url", "about:blank")
-    options.set_preference("startup.homepage_welcome_url.additional", "about:blank")
-    
+    # Deteksi otomatis: Jika di GitHub Actions, jalankan tanpa GUI (Headless)
     if os.getenv('CI') == 'true':
         options.add_argument('--headless')
     
     options.add_argument('--width=1920')
     options.add_argument('--height=1080')
 
+    # Setup Geckodriver untuk Firefox
     service = Service(GeckoDriverManager().install())
     d = webdriver.Firefox(service=service, options=options)
     d.implicitly_wait(10)

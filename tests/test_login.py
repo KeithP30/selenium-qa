@@ -1,9 +1,6 @@
-# tests/test_login.py
 import pytest
 
-from pages import login_page
 class TestLogin:
-
     def test_login_valid(self, login_page):
         login_page.login('tomsmith', 'SuperSecretPassword!')
         assert login_page.is_login_successful(), 'Login valid harus berhasil'
@@ -19,4 +16,4 @@ class TestLogin:
     def test_flash_message_content(self, login_page):
         login_page.login('wronguser', 'wrongpass')
         msg = login_page.get_flash_message()
-assert 'invalid' in msg.lower(), f'Pesan error tidak sesuai: {msg}'
+        assert 'invalid' in msg.lower(), f'Pesan error tidak sesuai: {msg}'
