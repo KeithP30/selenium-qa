@@ -30,6 +30,14 @@ def login_page(driver):
     from pages.login_page import LoginPage
     return LoginPage(driver)
 
+def load_csv(file_name):
+    # Mengambil path absolut ke folder data/
+    file_path = os.path.join(os.path.dirname(__file__), '..', 'data', file_name)
+    with open(file_path, mode='r') as f:
+        reader = csv.reader(f)
+        next(reader) # Lewati baris header (jika ada)
+        return list(reader)
+
 # Hook otomatis untuk mengambil screenshot saat test FAIL
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
