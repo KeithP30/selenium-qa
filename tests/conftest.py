@@ -10,9 +10,15 @@ from webdriver_manager.firefox import GeckoDriverManager
 def driver():
     options = Options()
     
-    # Deteksi otomatis: Jika di GitHub Actions, jalankan tanpa GUI (Headless)
-    if os.getenv('CI') == 'true':
+    # 1. Deteksi CI yang lebih aman: Aktifkan headless jika variabel CI ada
+    if os.getenv('CI'):
         options.add_argument('--headless')
+    
+    # 2. Matikan tab welcome / default browser check yang bisa bikin stuck
+    options.set_preference("browser.shell.checkDefaultBrowser", False)
+    options.set_preference("browser.startup.homepage", "about:blank")
+    options.set_preference("startup.homepage_welcome_url", "about:blank")
+    options.set_preference("startup.homepage_welcome_url.additional", "about:blank")
     
     options.add_argument('--width=1920')
     options.add_argument('--height=1080')
