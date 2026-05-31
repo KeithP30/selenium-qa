@@ -1,0 +1,5 @@
+username,email,password,expected,description
+testuser01,testuser01@example.com,Password123!,PASS,Registrasi dengan data valid
+,testuser01@example.com,Password123!,FAIL,Registrasi tanpa username
+testuser02,,Password123!,FAIL,Registrasi tanpa email
+testuser03,testuser03@example.com,,FAIL,Registrasi tanpa password
