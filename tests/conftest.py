@@ -1,5 +1,6 @@
 import pytest
 import os
+import csv
 from selenium import webdriver
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.firefox.options import Options
